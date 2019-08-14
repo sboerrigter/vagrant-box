@@ -58,7 +58,7 @@ sudo service apache2 restart
 echo "Installing PHP"
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
-sudo apt-get install -y php7.2
+sudo apt-get install -y php7.3
 sudo apt-get -y install libapache2-mod-php
 
 # Add index.php to readable file types
@@ -70,47 +70,47 @@ echo "$MAKE_PHP_PRIORITY" | sudo tee /etc/apache2/mods-enabled/dir.conf
 sudo service apache2 restart
 
 # PHP modules
-sudo apt-get -y install php7.2-common
-sudo apt-get -y install php7.2-dev
+sudo apt-get -y install php7.3-common
+sudo apt-get -y install php7.3-dev
 
 # Common Useful Stuff (some of these are probably already installed)
-sudo apt-get -y install php7.2-bcmath
-sudo apt-get -y install php7.2-bz2
-sudo apt-get -y install php7.2-cgi
-sudo apt-get -y install php7.2-cli
-sudo apt-get -y install php7.2-fpm
-sudo apt-get -y install php7.2-gd
-sudo apt-get -y install php7.2-imap
-sudo apt-get -y install php7.2-intl
-sudo apt-get -y install php7.2-json
-sudo apt-get -y install php7.2-mbstring
-sudo apt-get -y install php7.2-odbc
+sudo apt-get -y install php7.3-bcmath
+sudo apt-get -y install php7.3-bz2
+sudo apt-get -y install php7.3-cgi
+sudo apt-get -y install php7.3-cli
+sudo apt-get -y install php7.3-fpm
+sudo apt-get -y install php7.3-gd
+sudo apt-get -y install php7.3-imap
+sudo apt-get -y install php7.3-intl
+sudo apt-get -y install php7.3-json
+sudo apt-get -y install php7.3-mbstring
+sudo apt-get -y install php7.3-odbc
 sudo apt-get -y install php-pear
-sudo apt-get -y install php7.2-pspell
-sudo apt-get -y install php7.2-tidy
-sudo apt-get -y install php7.2-xmlrpc
-sudo apt-get -y install php7.2-zip
+sudo apt-get -y install php7.3-pspell
+sudo apt-get -y install php7.3-tidy
+sudo apt-get -y install php7.3-xmlrpc
+sudo apt-get -y install php7.3-zip
 
 # Enchant
 sudo apt-get -y install libenchant-dev
-sudo apt-get -y install php7.2-enchant
+sudo apt-get -y install php7.3-enchant
 
 # LDAP
 sudo apt-get -y install ldap-utils
-sudo apt-get -y install php7.2-ldap
+sudo apt-get -y install php7.3-ldap
 
 # CURL
 sudo apt-get -y install curl
-sudo apt-get -y install php7.2-curl
+sudo apt-get -y install php7.3-curl
 
 # IMAGE MAGIC
 sudo apt-get -y install imagemagick
-sudo apt-get -y install php7.2-imagick
+sudo apt-get -y install php7.3-imagick
 
 #
 # CUSTOM PHP SETTINGS
 #
-PHP_USER_INI_PATH=/etc/php/7.2/apache2/conf.d/user.in
+PHP_USER_INI_PATH=/etc/php/7.3/apache2/conf.d/user.in
 
 echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'display_errors = On' | sudo tee -a $PHP_USER_INI_PATH
@@ -123,7 +123,7 @@ sudo service apache2 restart
 echo 'opache.enable = 0' | sudo tee -a $PHP_USER_INI_PATH
 
 # Absolutely Force Zend OPcache off...
-sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/apache2/php.in
+sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.3/apache2/php.in
 
 sudo service apache2 restart
 
@@ -144,7 +144,7 @@ sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password passwor
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 sudo apt-get -y install mysql-server
 sudo mysqladmin -uroot -proot create scotchbox
-sudo apt-get -y install php7.2-mysql
+sudo apt-get -y install php7.3-mysql
 sudo service apache2 restart
 
 #
