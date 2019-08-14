@@ -1,13 +1,3 @@
-#!/bin/bash
-
-#
-# VARIABLES
-#
-reboot_webserver_helper() {
-    echo 'Rebooting your webserver'
-    sudo service apache2 restart
-}
-
 #
 # CORE / BASE STUFF
 #
@@ -131,7 +121,7 @@ echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'display_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'error_reporting = E_ALL' | sudo tee -a $PHP_USER_INI_PATH
 echo 'short_open_tag = On' | sudo tee -a $PHP_USER_INI_PATH
-reboot_webserver_helper
+sudo service apache2 restart
 
 # Disable PHP Zend OPcache
 echo 'opache.enable = 0' | sudo tee -a $PHP_USER_INI_PATH
@@ -139,7 +129,7 @@ echo 'opache.enable = 0' | sudo tee -a $PHP_USER_INI_PATH
 # Absolutely Force Zend OPcache off...
 sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/apache2/php.in
 
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # PHP UNIT
@@ -147,7 +137,7 @@ reboot_webserver_helper
 sudo wget https://phar.phpunit.de/phpunit-6.1.phar
 sudo chmod +x phpunit-6.1.phar
 sudo mv phpunit-6.1.phar /usr/local/bin/phpunit
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # MYSQL
@@ -157,7 +147,7 @@ sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again p
 sudo apt-get -y install mysql-server
 sudo mysqladmin -uroot -proot create scotchbox
 sudo apt-get -y install php7.2-mysql
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # PostreSQL
@@ -166,14 +156,14 @@ sudo apt-get -y install postgresql postgresql-contrib
 echo "CREATE ROLE root WITH LOGIN ENCRYPTED PASSWORD 'root';" | sudo -i -u postgres psql
 sudo -i -u postgres createdb --owner=root scotchbox
 sudo apt-get -y install php7.2-pgsql
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # SQLITE
 #
 sudo apt-get -y install sqlite
 sudo apt-get -y install php7.2-sqlite3
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # MONGODB
@@ -204,7 +194,7 @@ sudo service mongod start
 sudo pecl install mongodb
 sudo apt-get install -y php7.2-mongodb
 
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # COMPOSER
@@ -288,14 +278,14 @@ rvm use 2.5.0
 #
 sudo apt-get -y install redis-server
 sudo apt-get -y install php7.2-redis
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # MEMCACHED
 #
 sudo apt-get -y install memcached
 sudo apt-get -y install php7.2-memcached
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # GOLANG
@@ -333,7 +323,7 @@ sudo ln ~/go/bin/mhsendmail /usr/bin/mail
 # Make it work with PHP
 echo 'sendmail_path = /usr/bin/mhsendmail' | sudo tee -a /etc/php/7.2/apache2/conf.d/user.in
 
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # DISABLE WELCOME MESSAGE
@@ -345,7 +335,7 @@ sudo chmod -x /etc/update-motd.d/*
 #
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
-reboot_webserver_helper
+sudo service apache2 restart
 
 #
 # YOU ARE DONE
