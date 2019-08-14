@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# /*=================================
-# =            VARIABLES            =
-# =================================*/
+#
+# VARIABLES
+#
 INSTALL_NGINX_INSTEAD=0
 WELCOME_MESSAGE='
 MMMMMMMMMMMMMMMXl..........................cXMMMMMMMMMMMMMMM
@@ -59,13 +59,9 @@ reboot_webserver_helper() {
     echo 'Rebooting your webserver'
 }
 
-
-
-
-
-# /*=========================================
-# =            CORE / BASE STUFF            =
-# =========================================*/
+#
+# CORE / BASE STUFF
+#
 sudo apt-get update
 
 # The following is "sudo apt-get -y upgrade" without any prompts
@@ -81,11 +77,9 @@ sudo apt-get -y install git
 # Weird Vagrant issue fix
 sudo apt-get install -y ifupdown
 
-
-
-# /*======================================
-# =            INSTALL APACHE            =
-# ======================================*/
+#
+# INSTALL APACHE
+#
 if [ $INSTALL_NGINX_INSTEAD != 1 ]; then
 
     # Install the package
@@ -121,18 +115,11 @@ if [ $INSTALL_NGINX_INSTEAD != 1 ]; then
     sudo a2enmod rewrite
 
     sudo service apache2 restart
-
 fi
 
-
-
-
-
-
-
-# /*=====================================
-# =            INSTALL NGINX            =
-# =====================================*/
+#
+# INSTALL NGINX
+#
 if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
 
     # Install Nginx
@@ -164,19 +151,11 @@ if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
     echo "$MY_WEB_CONFIG" | sudo tee /etc/nginx/sites-available/default
 
     sudo systemctl restart nginx
-
 fi
 
-
-
-
-
-
-
-
-# /*===================================
-# =            INSTALL PHP            =
-# ===================================*/
+#
+# INSTALL PHP
+#
 
 # Install PHP
 sudo add-apt-repository -y ppa:ondrej/php # Super Latest Version (currently 7.2)
@@ -195,7 +174,6 @@ if [ $INSTALL_NGINX_INSTEAD != 1 ]; then
     echo "$MAKE_PHP_PRIORITY" | sudo tee /etc/apache2/mods-enabled/dir.conf
 
     sudo service apache2 restart
-
 fi
 
 # Make PHP and NGINX friends
@@ -239,19 +217,11 @@ if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
     echo "$MY_WEB_CONFIG" | sudo tee /etc/nginx/sites-available/default
 
     sudo systemctl restart nginx
-
 fi
 
-
-
-
-
-
-
-
-# /*===================================
-# =            PHP MODULES            =
-# ===================================*/
+#
+# PHP MODULES
+#
 
 # Base Stuff
 sudo apt-get -y install php7.2-common
@@ -291,17 +261,13 @@ sudo apt-get -y install php7.2-curl
 sudo apt-get -y install imagemagick
 sudo apt-get -y install php7.2-imagick
 
-
-
-
-
-# /*===========================================
-# =            CUSTOM PHP SETTINGS            =
-# ===========================================*/
+#
+# CUSTOM PHP SETTINGS
+#
 if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
     PHP_USER_INI_PATH=/etc/php/7.2/fpm/conf.d/user.ini
 else
-    PHP_USER_INI_PATH=/etc/php/7.2/apache2/conf.d/user.ini
+    PHP_USER_INI_PATH=/etc/php/7.2/apache2/conf.d/user.in
 fi
 
 echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
@@ -317,33 +283,21 @@ echo 'opache.enable = 0' | sudo tee -a $PHP_USER_INI_PATH
 if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
     sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/fpm/php.ini
 else
-    sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/apache2/php.ini
+    sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/apache2/php.in
 fi
 reboot_webserver_helper
 
-
-
-
-
-
-
-# /*================================
-# =            PHP UNIT            =
-# ================================*/
+#
+# PHP UNIT
+#
 sudo wget https://phar.phpunit.de/phpunit-6.1.phar
 sudo chmod +x phpunit-6.1.phar
 sudo mv phpunit-6.1.phar /usr/local/bin/phpunit
 reboot_webserver_helper
 
-
-
-
-
-
-
-# /*=============================
-# =            MYSQL            =
-# =============================*/
+#
+# MYSQL
+#
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 sudo apt-get -y install mysql-server
@@ -351,44 +305,25 @@ sudo mysqladmin -uroot -proot create scotchbox
 sudo apt-get -y install php7.2-mysql
 reboot_webserver_helper
 
-
-
-
-
-
-
-
-# /*=================================
-# =            PostreSQL            =
-# =================================*/
+#
+# PostreSQL
+#
 sudo apt-get -y install postgresql postgresql-contrib
 echo "CREATE ROLE root WITH LOGIN ENCRYPTED PASSWORD 'root';" | sudo -i -u postgres psql
 sudo -i -u postgres createdb --owner=root scotchbox
 sudo apt-get -y install php7.2-pgsql
 reboot_webserver_helper
 
-
-
-
-
-
-
-# /*==============================
-# =            SQLITE            =
-# ===============================*/
+#
+# SQLITE
+#
 sudo apt-get -y install sqlite
 sudo apt-get -y install php7.2-sqlite3
 reboot_webserver_helper
 
-
-
-
-
-
-
-# /*===============================
-# =            MONGODB            =
-# ===============================*/
+#
+# MONGODB
+#
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
 echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 sudo apt-get update
@@ -417,22 +352,9 @@ sudo apt-get install -y php7.2-mongodb
 
 reboot_webserver_helper
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# /*================================
-# =            COMPOSER            =
-# ================================*/
+#
+# COMPOSER
+#
 EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');")
@@ -441,67 +363,33 @@ rm composer-setup.php
 sudo mv composer.phar /usr/local/bin/composer
 sudo chmod 755 /usr/local/bin/composer
 
-
-
-
-
-
-
-
-# /*==================================
-# =            BEANSTALKD            =
-# ==================================*/
+#
+# BEANSTALKD
+#
 sudo apt-get -y install beanstalkd
 
-
-
-
-
-
-
-# /*==============================
-# =            WP-CLI            =
-# ==============================*/
+#
+# WP-CLI
+#
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 sudo chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
 
-
-
-
-
-
-
-
-# /*=============================
-# =            DRUSH            =
-# =============================*/
+#
+# DRUSH
+#
 wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/download/0.5.1/drush.phar
 sudo chmod +x drush.phar
 sudo mv drush.phar /usr/local/bin/drush
 
-
-
-
-
-
-
-
-# /*=============================
-# =            NGROK            =
-# =============================*/
+#
+# NGROK
+#
 sudo apt-get install ngrok-client
 
-
-
-
-
-
-
-
-# /*==============================
-# =            NODEJS            =
-# ==============================*/
+#
+# NODEJS
+#
 sudo apt-get -y install nodejs
 sudo apt-get -y install npm
 
@@ -520,30 +408,17 @@ sudo npm install -g browserify
 sudo npm install -g pm2
 sudo npm install -g webpack
 
-
-
-
-
-
-
-# /*============================
-# =            YARN            =
-# ============================*/
+#
+# YARN
+#
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update
 sudo apt-get -y install yarn
 
-
-
-
-
-
-
-
-# /*============================
-# =            RUBY            =
-# ============================*/
+#
+# RUBY
+#
 sudo apt-get -y install ruby
 sudo apt-get -y install ruby-dev
 
@@ -554,56 +429,30 @@ source ~/.rvm/scripts/rvm
 rvm install 2.5.0
 rvm use 2.5.0
 
-
-
-
-
-
-
-# /*=============================
-# =            REDIS            =
-# =============================*/
+#
+# REDIS
+#
 sudo apt-get -y install redis-server
 sudo apt-get -y install php7.2-redis
 reboot_webserver_helper
 
-
-
-
-
-
-
-# /*=================================
-# =            MEMCACHED            =
-# =================================*/
+#
+# MEMCACHED
+#
 sudo apt-get -y install memcached
 sudo apt-get -y install php7.2-memcached
 reboot_webserver_helper
 
-
-
-
-
-
-
-
-# /*==============================
-# =            GOLANG            =
-# ==============================*/
+#
+# GOLANG
+#
 sudo add-apt-repository -y ppa:longsleep/golang-backports
 sudo apt-get update
 sudo apt-get -y install golang-go
 
-
-
-
-
-
-
-
-# /*===============================
-# =            MAILHOG            =
-# ===============================*/
+#
+# MAILHOG
+#
 sudo wget --quiet -O ~/mailhog https://github.com/mailhog/MailHog/releases/download/v1.0.0/MailHog_linux_amd64
 sudo chmod +x ~/mailhog
 
@@ -631,25 +480,14 @@ sudo ln ~/go/bin/mhsendmail /usr/bin/mail
 if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
     echo 'sendmail_path = /usr/bin/mhsendmail' | sudo tee -a /etc/php/7.2/fpm/conf.d/user.ini
 else
-    echo 'sendmail_path = /usr/bin/mhsendmail' | sudo tee -a /etc/php/7.2/apache2/conf.d/user.ini
+    echo 'sendmail_path = /usr/bin/mhsendmail' | sudo tee -a /etc/php/7.2/apache2/conf.d/user.in
 fi
 
 reboot_webserver_helper
 
-
-
-
-
-
-
-
-
-
-
-
-# /*=======================================
-# =            WELCOME MESSAGE            =
-# =======================================*/
+#
+# WELCOME MESSAGE
+#
 
 # Disable default messages by removing execute privilege
 sudo chmod -x /etc/update-motd.d/*
@@ -657,23 +495,14 @@ sudo chmod -x /etc/update-motd.d/*
 # Set the new message
 echo "$WELCOME_MESSAGE" | sudo tee /etc/motd
 
-
-
-
-
-# /*===================================================
-# =            FINAL GOOD MEASURE, WHY NOT            =
-# ===================================================*/
+#
+# FINAL GOOD MEASURE, WHY NOT
+#
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 reboot_webserver_helper
 
-
-
-
-
-
-# /*====================================
-# =            YOU ARE DONE            =
-# ====================================*/
-echo 'Booooooooom! We are done. You are a hero. I love you.'
+#
+# YOU ARE DONE
+#
+echo 'Done.'
