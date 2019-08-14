@@ -108,14 +108,6 @@ sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.3/apache2/php.in
 sudo service apache2 restart
 
 #
-# PHPUnit
-#
-sudo wget https://phar.phpunit.de/phpunit-6.1.phar
-sudo chmod +x phpunit-6.1.phar
-sudo mv phpunit-6.1.phar /usr/local/bin/phpunit
-sudo service apache2 restart
-
-#
 # MySQL
 #
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
