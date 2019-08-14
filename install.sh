@@ -1,7 +1,6 @@
 #
 # Package manager
 #
-echo "Installing packages"
 sudo apt-get update
 
 # The following is "sudo apt-get -y upgrade" without any prompts
@@ -18,7 +17,6 @@ sudo apt-get install -y ifupdown
 #
 # Apache
 #
-echo "Installing Apache"
 sudo add-apt-repository -y ppa:ondrej/apache2
 sudo apt-get update
 sudo apt-get -y install apache2
@@ -55,7 +53,6 @@ sudo service apache2 restart
 #
 # PHP
 #
-echo "Installing PHP"
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install -y php7.3
@@ -130,7 +127,6 @@ sudo service apache2 restart
 #
 # PHPUnit
 #
-echo "Installing PHPUnit"
 sudo wget https://phar.phpunit.de/phpunit-6.1.phar
 sudo chmod +x phpunit-6.1.phar
 sudo mv phpunit-6.1.phar /usr/local/bin/phpunit
@@ -139,7 +135,6 @@ sudo service apache2 restart
 #
 # MySQL
 #
-echo "Installing MySQL"
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 sudo apt-get -y install mysql-server
@@ -150,7 +145,6 @@ sudo service apache2 restart
 #
 # Composer
 #
-echo "Installing Composer"
 EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');")
@@ -162,7 +156,6 @@ sudo chmod 755 /usr/local/bin/composer
 #
 # WP-CLI
 #
-echo "Installing WP-CLI"
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 sudo chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
@@ -170,7 +163,6 @@ sudo mv wp-cli.phar /usr/local/bin/wp
 #
 # Node.js
 #
-echo "Installing Node.js"
 sudo apt-get -y install nodejs
 sudo apt-get -y install npm
 
@@ -192,7 +184,6 @@ sudo npm install -g webpack
 #
 # Ruby
 #
-echo "Installing Ruby"
 sudo apt-get -y install ruby
 sudo apt-get -y install ruby-dev
 
@@ -204,13 +195,15 @@ rvm install 2.5.0
 rvm use 2.5.0
 
 #
+# Disable welcome message
+#
+sudo chmod -x /etc/update-motd.d/*
+
+#
 # Finish installation
 #
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 sudo service apache2 restart
-
-# Disable welcome message
-sudo chmod -x /etc/update-motd.d/*
 
 echo "Installation complete"
