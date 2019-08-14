@@ -3,20 +3,9 @@
 #
 # VARIABLES
 #
-INSTALL_NGINX_INSTEAD=0
-
 reboot_webserver_helper() {
-
-    if [ $INSTALL_NGINX_INSTEAD != 1 ]; then
-        sudo service apache2 restart
-    fi
-
-    if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
-        sudo systemctl restart php7.2-fpm
-        sudo systemctl restart nginx
-    fi
-
     echo 'Rebooting your webserver'
+    sudo service apache2 restart
 }
 
 #
@@ -40,78 +29,38 @@ sudo apt-get install -y ifupdown
 #
 # INSTALL APACHE
 #
-if [ $INSTALL_NGINX_INSTEAD != 1 ]; then
+sudo add-apt-repository -y ppa:ondrej/apache2 # Super Latest Version
+sudo apt-get update
+sudo apt-get -y install apache2
 
-    # Install the package
-    sudo add-apt-repository -y ppa:ondrej/apache2 # Super Latest Version
-    sudo apt-get update
-    sudo apt-get -y install apache2
+# Remove "html" and add public
+mv /var/www/html /var/www/public
 
-    # Remove "html" and add public
-    mv /var/www/html /var/www/public
+# Clean VHOST with full permissions
+MY_WEB_CONFIG='<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/public
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    <Directory "/var/www/public">
+        Options Indexes FollowSymLinks
+        AllowOverride all
+        Require all granted
+    </Directory>
+</VirtualHost>'
+echo "$MY_WEB_CONFIG" | sudo tee /etc/apache2/sites-available/000-default.conf
 
-    # Clean VHOST with full permissions
-    MY_WEB_CONFIG='<VirtualHost *:80>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
-        <Directory "/var/www/public">
-            Options Indexes FollowSymLinks
-            AllowOverride all
-            Require all granted
-        </Directory>
-    </VirtualHost>'
-    echo "$MY_WEB_CONFIG" | sudo tee /etc/apache2/sites-available/000-default.conf
+# Squash annoying FQDN warning
+echo "ServerName scotchbox" | sudo tee /etc/apache2/conf-available/servername.conf
+sudo a2enconf servername
 
-    # Squash annoying FQDN warning
-    echo "ServerName scotchbox" | sudo tee /etc/apache2/conf-available/servername.conf
-    sudo a2enconf servername
+# Enabled missing h5bp modules (https://github.com/h5bp/server-configs-apache)
+sudo a2enmod expires
+sudo a2enmod headers
+sudo a2enmod include
+sudo a2enmod rewrite
 
-    # Enabled missing h5bp modules (https://github.com/h5bp/server-configs-apache)
-    sudo a2enmod expires
-    sudo a2enmod headers
-    sudo a2enmod include
-    sudo a2enmod rewrite
-
-    sudo service apache2 restart
-fi
-
-#
-# INSTALL NGINX
-#
-if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
-
-    # Install Nginx
-    sudo add-apt-repository -y ppa:ondrej/nginx-mainline # Super Latest Version
-    sudo apt-get update
-    sudo apt-get -y install nginx
-    sudo systemctl enable nginx
-
-    # Remove "html" and add public
-    mv /var/www/html /var/www/public
-
-    # Make sure your web server knows you did this...
-    MY_WEB_CONFIG='server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-
-        root /var/www/public;
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-
-        location = /favicon.ico { access_log off; log_not_found off; }
-        location = /robots.txt  { access_log off; log_not_found off; }
-
-        location / {
-            try_files $uri $uri/ /index.php?$query_string;
-        }
-    }'
-    echo "$MY_WEB_CONFIG" | sudo tee /etc/nginx/sites-available/default
-
-    sudo systemctl restart nginx
-fi
+sudo service apache2 restart
 
 #
 # INSTALL PHP
@@ -121,63 +70,15 @@ fi
 sudo add-apt-repository -y ppa:ondrej/php # Super Latest Version (currently 7.2)
 sudo apt-get update
 sudo apt-get install -y php7.2
+sudo apt-get -y install libapache2-mod-php
 
-# Make PHP and Apache friends
-if [ $INSTALL_NGINX_INSTEAD != 1 ]; then
+# Add index.php to readable file types
+MAKE_PHP_PRIORITY='<IfModule mod_dir.c>
+    DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+</IfModule>'
+echo "$MAKE_PHP_PRIORITY" | sudo tee /etc/apache2/mods-enabled/dir.conf
 
-    sudo apt-get -y install libapache2-mod-php
-
-    # Add index.php to readable file types
-    MAKE_PHP_PRIORITY='<IfModule mod_dir.c>
-        DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
-    </IfModule>'
-    echo "$MAKE_PHP_PRIORITY" | sudo tee /etc/apache2/mods-enabled/dir.conf
-
-    sudo service apache2 restart
-fi
-
-# Make PHP and NGINX friends
-if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
-
-    # FPM STUFF
-    sudo apt-get -y install php7.2-fpm
-    sudo systemctl enable php7.2-fpm
-    sudo systemctl start php7.2-fpm
-
-    # Fix path FPM setting
-    echo 'cgi.fix_pathinfo = 0' | sudo tee -a /etc/php/7.2/fpm/conf.d/user.ini
-    sudo systemctl restart php7.2-fpm
-
-    # Add index.php to readable file types and enable PHP FPM since PHP alone won't work
-    MY_WEB_CONFIG='server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-
-        root /var/www/public;
-        index index.php index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-
-        location = /favicon.ico { access_log off; log_not_found off; }
-        location = /robots.txt  { access_log off; log_not_found off; }
-
-        location / {
-            try_files $uri $uri/ /index.php?$query_string;
-        }
-
-        location ~ \.php$ {
-            include snippets/fastcgi-php.conf;
-            fastcgi_pass unix:/run/php/php7.2-fpm.sock;
-        }
-
-        location ~ /\.ht {
-            deny all;
-        }
-    }'
-    echo "$MY_WEB_CONFIG" | sudo tee /etc/nginx/sites-available/default
-
-    sudo systemctl restart nginx
-fi
+sudo service apache2 restart
 
 #
 # PHP MODULES
@@ -224,11 +125,7 @@ sudo apt-get -y install php7.2-imagick
 #
 # CUSTOM PHP SETTINGS
 #
-if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
-    PHP_USER_INI_PATH=/etc/php/7.2/fpm/conf.d/user.ini
-else
-    PHP_USER_INI_PATH=/etc/php/7.2/apache2/conf.d/user.in
-fi
+PHP_USER_INI_PATH=/etc/php/7.2/apache2/conf.d/user.in
 
 echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'display_errors = On' | sudo tee -a $PHP_USER_INI_PATH
@@ -240,11 +137,8 @@ reboot_webserver_helper
 echo 'opache.enable = 0' | sudo tee -a $PHP_USER_INI_PATH
 
 # Absolutely Force Zend OPcache off...
-if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
-    sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/fpm/php.ini
-else
-    sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/apache2/php.in
-fi
+sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/apache2/php.in
+
 reboot_webserver_helper
 
 #
@@ -437,11 +331,7 @@ sudo ln ~/go/bin/mhsendmail /usr/bin/sendmail
 sudo ln ~/go/bin/mhsendmail /usr/bin/mail
 
 # Make it work with PHP
-if [ $INSTALL_NGINX_INSTEAD == 1 ]; then
-    echo 'sendmail_path = /usr/bin/mhsendmail' | sudo tee -a /etc/php/7.2/fpm/conf.d/user.ini
-else
-    echo 'sendmail_path = /usr/bin/mhsendmail' | sudo tee -a /etc/php/7.2/apache2/conf.d/user.in
-fi
+echo 'sendmail_path = /usr/bin/mhsendmail' | sudo tee -a /etc/php/7.2/apache2/conf.d/user.in
 
 reboot_webserver_helper
 
