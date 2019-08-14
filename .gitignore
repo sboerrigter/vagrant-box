@@ -1,4 +1,4 @@
 .DS_STORE
 .vagrant
-sites/*
-!sites/.gitkeep
+sites-enabled/*
+!sites-enabled/.gitkeep
