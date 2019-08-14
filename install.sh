@@ -195,15 +195,13 @@ rvm install 2.5.0
 rvm use 2.5.0
 
 #
-# Disable welcome message
-#
-sudo chmod -x /etc/update-motd.d/*
-
-#
 # Finish installation
 #
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 sudo service apache2 restart
+
+# Disable welcome message
+sudo chmod -x /etc/update-motd.d/*
 
 echo "Installation complete"
