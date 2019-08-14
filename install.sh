@@ -1,5 +1,5 @@
 #
-# CORE / BASE STUFF
+# Package manager
 #
 sudo apt-get update
 
@@ -12,14 +12,12 @@ sudo apt-get install -y software-properties-common
 sudo apt-get install -y python-software-properties
 sudo apt-get -y install vim
 sudo apt-get -y install git
-
-# Weird Vagrant issue fix
 sudo apt-get install -y ifupdown
 
 #
-# INSTALL APACHE
+# Apache
 #
-sudo add-apt-repository -y ppa:ondrej/apache2 # Super Latest Version
+sudo add-apt-repository -y ppa:ondrej/apache2
 sudo apt-get update
 sudo apt-get -y install apache2
 
@@ -53,11 +51,9 @@ sudo a2enmod rewrite
 sudo service apache2 restart
 
 #
-# INSTALL PHP
+# PHP
 #
-
-# Install PHP
-sudo add-apt-repository -y ppa:ondrej/php # Super Latest Version (currently 7.2)
+sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install -y php7.2
 sudo apt-get -y install libapache2-mod-php
@@ -70,11 +66,7 @@ echo "$MAKE_PHP_PRIORITY" | sudo tee /etc/apache2/mods-enabled/dir.conf
 
 sudo service apache2 restart
 
-#
-# PHP MODULES
-#
-
-# Base Stuff
+# PHP modules
 sudo apt-get -y install php7.2-common
 sudo apt-get -y install php7.2-dev
 
@@ -121,6 +113,7 @@ echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'display_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'error_reporting = E_ALL' | sudo tee -a $PHP_USER_INI_PATH
 echo 'short_open_tag = On' | sudo tee -a $PHP_USER_INI_PATH
+
 sudo service apache2 restart
 
 # Disable PHP Zend OPcache
@@ -132,7 +125,7 @@ sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.2/apache2/php.in
 sudo service apache2 restart
 
 #
-# PHP UNIT
+# PHPUnit
 #
 sudo wget https://phar.phpunit.de/phpunit-6.1.phar
 sudo chmod +x phpunit-6.1.phar
@@ -140,7 +133,7 @@ sudo mv phpunit-6.1.phar /usr/local/bin/phpunit
 sudo service apache2 restart
 
 #
-# MYSQL
+# MySQL
 #
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
@@ -150,54 +143,7 @@ sudo apt-get -y install php7.2-mysql
 sudo service apache2 restart
 
 #
-# PostreSQL
-#
-sudo apt-get -y install postgresql postgresql-contrib
-echo "CREATE ROLE root WITH LOGIN ENCRYPTED PASSWORD 'root';" | sudo -i -u postgres psql
-sudo -i -u postgres createdb --owner=root scotchbox
-sudo apt-get -y install php7.2-pgsql
-sudo service apache2 restart
-
-#
-# SQLITE
-#
-sudo apt-get -y install sqlite
-sudo apt-get -y install php7.2-sqlite3
-sudo service apache2 restart
-
-#
-# MONGODB
-#
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
-sudo apt-get update
-sudo apt-get install -y mongodb-org
-
-sudo tee /lib/systemd/system/mongod.service  <<EOL
-[Unit]
-Description=High-performance, schema-free document-oriented database
-After=network.target
-Documentation=https://docs.mongodb.org/manual
-
-[Service]
-User=mongodb
-Group=mongodb
-ExecStart=/usr/bin/mongod --quiet --config /etc/mongod.conf
-
-[Install]
-WantedBy=multi-user.target
-EOL
-sudo systemctl enable mongod
-sudo service mongod start
-
-# Enable it for PHP
-sudo pecl install mongodb
-sudo apt-get install -y php7.2-mongodb
-
-sudo service apache2 restart
-
-#
-# COMPOSER
+# Composer
 #
 EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -208,11 +154,6 @@ sudo mv composer.phar /usr/local/bin/composer
 sudo chmod 755 /usr/local/bin/composer
 
 #
-# BEANSTALKD
-#
-sudo apt-get -y install beanstalkd
-
-#
 # WP-CLI
 #
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -220,19 +161,7 @@ sudo chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
 
 #
-# DRUSH
-#
-wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/download/0.5.1/drush.phar
-sudo chmod +x drush.phar
-sudo mv drush.phar /usr/local/bin/drush
-
-#
-# NGROK
-#
-sudo apt-get install ngrok-client
-
-#
-# NODEJS
+# Node.js
 #
 sudo apt-get -y install nodejs
 sudo apt-get -y install npm
@@ -253,15 +182,7 @@ sudo npm install -g pm2
 sudo npm install -g webpack
 
 #
-# YARN
-#
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo apt-get update
-sudo apt-get -y install yarn
-
-#
-# RUBY
+# Ruby
 #
 sudo apt-get -y install ruby
 sudo apt-get -y install ruby-dev
@@ -274,70 +195,15 @@ rvm install 2.5.0
 rvm use 2.5.0
 
 #
-# REDIS
-#
-sudo apt-get -y install redis-server
-sudo apt-get -y install php7.2-redis
-sudo service apache2 restart
-
-#
-# MEMCACHED
-#
-sudo apt-get -y install memcached
-sudo apt-get -y install php7.2-memcached
-sudo service apache2 restart
-
-#
-# GOLANG
-#
-sudo add-apt-repository -y ppa:longsleep/golang-backports
-sudo apt-get update
-sudo apt-get -y install golang-go
-
-#
-# MAILHOG
-#
-sudo wget --quiet -O ~/mailhog https://github.com/mailhog/MailHog/releases/download/v1.0.0/MailHog_linux_amd64
-sudo chmod +x ~/mailhog
-
-# Enable and Turn on
-sudo tee /etc/systemd/system/mailhog.service <<EOL
-[Unit]
-Description=MailHog Service
-After=network.service vagrant.mount
-[Service]
-Type=simple
-ExecStart=/usr/bin/env /home/vagrant/mailhog > /dev/null 2>&1 &
-[Install]
-WantedBy=multi-user.target
-EOL
-sudo systemctl enable mailhog
-sudo systemctl start mailhog
-
-# Install Sendmail replacement for MailHog
-sudo go get github.com/mailhog/mhsendmail
-sudo ln ~/go/bin/mhsendmail /usr/bin/mhsendmail
-sudo ln ~/go/bin/mhsendmail /usr/bin/sendmail
-sudo ln ~/go/bin/mhsendmail /usr/bin/mail
-
-# Make it work with PHP
-echo 'sendmail_path = /usr/bin/mhsendmail' | sudo tee -a /etc/php/7.2/apache2/conf.d/user.in
-
-sudo service apache2 restart
-
-#
-# DISABLE WELCOME MESSAGE
+# Disable welcome message
 #
 sudo chmod -x /etc/update-motd.d/*
 
 #
-# FINAL GOOD MEASURE, WHY NOT
+# Finish installation
 #
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 sudo service apache2 restart
 
-#
-# YOU ARE DONE
-#
-echo 'Done.'
+echo "Installation complete"
