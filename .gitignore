@@ -2,3 +2,4 @@
 .vagrant
 sites-enabled/*
 !sites-enabled/.gitkeep
+!sites-enabled/example.conf
