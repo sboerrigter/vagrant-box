@@ -21,22 +21,8 @@ sudo add-apt-repository -y ppa:ondrej/apache2
 sudo apt-get update
 sudo apt-get -y install apache2
 
-# Remove "html" and add public
-mv /var/www/html /var/www/public
-
-# Clean VHOST with full permissions
-MY_WEB_CONFIG='<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/public
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-    <Directory "/var/www/public">
-        Options Indexes FollowSymLinks
-        AllowOverride all
-        Require all granted
-    </Directory>
-</VirtualHost>'
-echo "$MY_WEB_CONFIG" | sudo tee /etc/apache2/sites-available/000-default.conf
+# Remove "html" folder
+rm -r /var/www/html
 
 # Squash annoying FQDN warning
 echo "ServerName scotchbox" | sudo tee /etc/apache2/conf-available/servername.conf
