@@ -21,9 +21,6 @@ sudo add-apt-repository -y ppa:ondrej/apache2
 sudo apt-get update
 sudo apt-get -y install apache2
 
-# Remove "html" folder
-rm -r /var/www/html
-
 # Squash annoying FQDN warning
 echo "ServerName scotchbox" | sudo tee /etc/apache2/conf-available/servername.conf
 sudo a2enconf servername
