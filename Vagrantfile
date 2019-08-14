@@ -9,4 +9,10 @@ Vagrant.configure("2") do |config|
 
     # SSH Agent Forwarding
     config.ssh.forward_agent = true
+
+    # Allocate more resources
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 4096
+        v.cpus = 4
+    end
 end
