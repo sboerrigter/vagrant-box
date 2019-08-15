@@ -90,7 +90,7 @@ sudo apt-get -y install php7.3-imagick
 #
 # CUSTOM PHP SETTINGS
 #
-PHP_USER_INI_PATH=/etc/php/7.3/apache2/conf.d/user.in
+PHP_USER_INI_PATH=/etc/php/7.3/apache2/php.ini
 
 echo 'display_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
