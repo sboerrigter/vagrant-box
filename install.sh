@@ -1,6 +1,4 @@
-#
 # Package manager
-#
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 sudo apt-get install -y build-essential
@@ -11,9 +9,7 @@ sudo apt-get -y install vim
 sudo apt-get -y install git
 sudo apt-get install -y ifupdown
 
-#
 # Apache
-#
 sudo add-apt-repository -y ppa:ondrej/apache2
 sudo apt-get update
 sudo apt-get -y install apache2
@@ -25,9 +21,7 @@ sudo a2enmod include
 sudo a2enmod rewrite
 sudo service apache2 restart
 
-#
 # PHP
-#
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install -y php7.3
@@ -77,18 +71,14 @@ opache.enable = 0' | sudo tee /etc/php/7.3/apache2/php.ini
 
 sudo service apache2 restart
 
-#
 # MySQL
-#
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 sudo apt-get -y install mysql-server
 sudo apt-get -y install php7.3-mysql
 sudo service apache2 restart
 
-#
 # Composer
-#
 EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');")
@@ -97,24 +87,18 @@ rm composer-setup.php
 sudo mv composer.phar /usr/local/bin/composer
 sudo chmod 755 /usr/local/bin/composer
 
-#
 # WP-CLI
-#
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
 sudo chmod +x /usr/local/bin/wp
 
-#
 # Node.js, NPM & NVM
-#
 sudo apt-get -y install nodejs
 sudo apt-get -y install npm
 wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | bash
 source ~/.nvm/nvm.sh
 
-#
 # Ruby, Bundler & RVM
-#
 sudo apt-get -y install ruby
 sudo apt-get -y install ruby-dev
 gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
@@ -124,9 +108,7 @@ rvm install 2.6.3
 rvm use 2.6.3
 gem install bundler
 
-#
 # Finish installation
-#
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 sudo service apache2 restart
