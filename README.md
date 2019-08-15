@@ -61,7 +61,7 @@ To add a new website to the Vagrant box you need to follow the following steps:
 
 `192.168.33.10 www.project.test project.test`
 
-3. Copy `~/Sites/vagrant-box/sites-enabled/example.conf` to `~/sites/vagrant-box/sites-enabled/project.conf` and set the correct DocumentRoot, ServerName and ServerAlias.
+3. Copy `~/Sites/vagrant-box/sites/example.conf` to `~/sites/vagrant-box/sites/project.conf` and set the correct DocumentRoot, ServerName and ServerAlias.
 4. SSH into your Vagrant box and run `sudo service apache2 restart`.
 5. Go to http://www.project.test to view your website.
 

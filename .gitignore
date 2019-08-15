@@ -1,5 +1,5 @@
 .DS_STORE
 .vagrant
-sites-enabled/*
-!sites-enabled/.gitkeep
-!sites-enabled/example.conf
+sites/*
+!sites/.gitkeep
+!sites/example.conf
