@@ -33,7 +33,6 @@ sudo apt-get update
 sudo apt-get install -y php7.3
 sudo apt-get -y install libapache2-mod-php
 
-# Add index.php to readable file types
 MAKE_PHP_PRIORITY='<IfModule mod_dir.c>
     DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
 </IfModule>'
@@ -68,7 +67,6 @@ sudo apt-get -y install php7.3-tidy
 sudo apt-get -y install php7.3-xmlrpc
 sudo apt-get -y install php7.3-zip
 
-# PHP settings
 echo 'display_errors = On
 display_startup_errors = On
 error_reporting = E_ALL
@@ -111,8 +109,6 @@ sudo mv wp-cli.phar /usr/local/bin/wp
 #
 sudo apt-get -y install nodejs
 sudo apt-get -y install npm
-
-# Use NVM though to make life easy
 wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | bash
 source ~/.nvm/nvm.sh
 
@@ -126,7 +122,6 @@ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703
 source ~/.rvm/scripts/rvm
 rvm install 2.6.3
 rvm use 2.6.3
-sudo gem install bundler
 
 #
 # Finish installation
@@ -134,8 +129,3 @@ sudo gem install bundler
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 sudo service apache2 restart
-
-# Disable welcome message
-sudo chmod -x /etc/update-motd.d/*
-
-echo "Installation complete"
