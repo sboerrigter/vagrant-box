@@ -103,7 +103,7 @@ echo 'upload_max_filesize = 1024M' | sudo tee -a $PHP_USER_INI_PATH
 echo 'opache.enable = 0' | sudo tee -a $PHP_USER_INI_PATH
 
 # Absolutely Force Zend OPcache off...
-sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.3/apache2/php.in
+sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.3/apache2/php.ini
 
 sudo service apache2 restart
 
@@ -143,7 +143,6 @@ sudo apt-get -y install npm
 # Use NVM though to make life easy
 wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | bash
 source ~/.nvm/nvm.sh
-nvm install 8.9.4
 
 #
 # Ruby
@@ -152,11 +151,11 @@ sudo apt-get -y install ruby
 sudo apt-get -y install ruby-dev
 
 # RVM
-gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 \curl -sSL https://get.rvm.io | bash -s stable
 source ~/.rvm/scripts/rvm
-rvm install 2.5.0
-rvm use 2.5.0
+rvm install 2.6.3
+rvm use 2.6.3
 
 # Bundler
 sudo gem install bundler
