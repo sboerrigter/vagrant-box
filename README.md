@@ -12,7 +12,7 @@ Custom Vagrant box to host multiple websites on a local virtual machine. Based o
 - WP CLI
 - Node.js, NPM & NVM
 - Ruby, Bundler & RVM
-- Bash aliasses to run Capistrano commands
+- A few usefull bash aliasses to run Capistrano commands (see `.bashrc`)
 
 Some of these dependencies wil automatically update to the latest version if you run `vagrant provision` or `vagrant up` for the first time.
 
