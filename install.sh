@@ -2,6 +2,7 @@
 export DEBIAN_FRONTEND=noninteractive
 export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
+
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 sudo apt-get install -y build-essential
@@ -17,12 +18,18 @@ sudo apt-get install -y vim
 sudo add-apt-repository -y ppa:ondrej/apache2
 sudo apt-get update
 sudo apt-get install -y apache2
-echo "ServerName vagrant" | sudo tee /etc/apache2/conf-available/servername.conf
 sudo a2enconf servername
 sudo a2enmod expires
 sudo a2enmod headers
 sudo a2enmod include
 sudo a2enmod rewrite
+
+echo '<Directory "/var/www">
+    AllowOverride All
+</Directory>' | sudo tee /etc/apache2/conf-enabled/override.conf
+
+echo 'ServerName vagrant' | sudo tee /etc/apache2/conf-available/servername.conf
+
 sudo service apache2 restart
 
 # PHP
@@ -30,14 +37,6 @@ sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install -y php7.3
 sudo apt-get install -y libapache2-mod-php
-
-MAKE_PHP_PRIORITY='<IfModule mod_dir.c>
-    DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
-</IfModule>'
-echo "$MAKE_PHP_PRIORITY" | sudo tee /etc/apache2/mods-enabled/dir.conf
-
-sudo service apache2 restart
-
 sudo apt-get install -y curl
 sudo apt-get install -y imagemagick
 sudo apt-get install -y ldap-utils
@@ -64,6 +63,10 @@ sudo apt-get install -y php7.3-pspell
 sudo apt-get install -y php7.3-tidy
 sudo apt-get install -y php7.3-xmlrpc
 sudo apt-get install -y php7.3-zip
+
+echo '<IfModule mod_dir.c>
+    DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+</IfModule>' | sudo tee /etc/apache2/mods-enabled/dir.conf
 
 echo 'display_errors = On
 display_startup_errors = On
