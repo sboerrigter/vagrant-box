@@ -22,7 +22,7 @@ sudo apt-get update
 sudo apt-get -y install apache2
 
 # Squash annoying FQDN warning
-echo "ServerName scotchbox" | sudo tee /etc/apache2/conf-available/servername.conf
+echo "ServerName vagrant" | sudo tee /etc/apache2/conf-available/servername.conf
 sudo a2enconf servername
 
 # Enabled missing h5bp modules (https://github.com/h5bp/server-configs-apache)
@@ -92,12 +92,12 @@ sudo apt-get -y install php7.3-imagick
 #
 PHP_USER_INI_PATH=/etc/php/7.3/apache2/conf.d/user.in
 
-echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'display_errors = On' | sudo tee -a $PHP_USER_INI_PATH
+echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
 echo 'error_reporting = E_ALL' | sudo tee -a $PHP_USER_INI_PATH
+echo 'post_max_size = 1024M' | sudo tee -a $PHP_USER_INI_PATH
 echo 'short_open_tag = On' | sudo tee -a $PHP_USER_INI_PATH
-
-sudo service apache2 restart
+echo 'upload_max_filesize = 1024M' | sudo tee -a $PHP_USER_INI_PATH
 
 # Disable PHP Zend OPcache
 echo 'opache.enable = 0' | sudo tee -a $PHP_USER_INI_PATH
