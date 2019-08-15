@@ -122,6 +122,7 @@ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703
 source ~/.rvm/scripts/rvm
 rvm install 2.6.3
 rvm use 2.6.3
+gem install bundler
 
 #
 # Finish installation
