@@ -1,5 +1,7 @@
 # Package manager
 export DEBIAN_FRONTEND=noninteractive
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 sudo apt-get install -y build-essential
