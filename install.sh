@@ -2,10 +2,7 @@
 # Package manager
 #
 sudo apt-get update
-
-# The following is "sudo apt-get -y upgrade" without any prompts
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
-
 sudo apt-get install -y build-essential
 sudo apt-get install -y tcl
 sudo apt-get install -y software-properties-common
@@ -20,17 +17,12 @@ sudo apt-get install -y ifupdown
 sudo add-apt-repository -y ppa:ondrej/apache2
 sudo apt-get update
 sudo apt-get -y install apache2
-
-# Squash annoying FQDN warning
 echo "ServerName vagrant" | sudo tee /etc/apache2/conf-available/servername.conf
 sudo a2enconf servername
-
-# Enabled missing h5bp modules (https://github.com/h5bp/server-configs-apache)
 sudo a2enmod expires
 sudo a2enmod headers
 sudo a2enmod include
 sudo a2enmod rewrite
-
 sudo service apache2 restart
 
 #
@@ -49,61 +41,41 @@ echo "$MAKE_PHP_PRIORITY" | sudo tee /etc/apache2/mods-enabled/dir.conf
 
 sudo service apache2 restart
 
-# PHP modules
-sudo apt-get -y install php7.3-common
-sudo apt-get -y install php7.3-dev
-
-# Common Useful Stuff (some of these are probably already installed)
+sudo apt-get -y install curl
+sudo apt-get -y install imagemagick
+sudo apt-get -y install ldap-utils
+sudo apt-get -y install libenchant-dev
+sudo apt-get -y install php-pear
 sudo apt-get -y install php7.3-bcmath
 sudo apt-get -y install php7.3-bz2
 sudo apt-get -y install php7.3-cgi
 sudo apt-get -y install php7.3-cli
+sudo apt-get -y install php7.3-common
+sudo apt-get -y install php7.3-curl
+sudo apt-get -y install php7.3-dev
+sudo apt-get -y install php7.3-enchant
 sudo apt-get -y install php7.3-fpm
 sudo apt-get -y install php7.3-gd
+sudo apt-get -y install php7.3-imagick
 sudo apt-get -y install php7.3-imap
 sudo apt-get -y install php7.3-intl
 sudo apt-get -y install php7.3-json
+sudo apt-get -y install php7.3-ldap
 sudo apt-get -y install php7.3-mbstring
 sudo apt-get -y install php7.3-odbc
-sudo apt-get -y install php-pear
 sudo apt-get -y install php7.3-pspell
 sudo apt-get -y install php7.3-tidy
 sudo apt-get -y install php7.3-xmlrpc
 sudo apt-get -y install php7.3-zip
 
-# Enchant
-sudo apt-get -y install libenchant-dev
-sudo apt-get -y install php7.3-enchant
-
-# LDAP
-sudo apt-get -y install ldap-utils
-sudo apt-get -y install php7.3-ldap
-
-# CURL
-sudo apt-get -y install curl
-sudo apt-get -y install php7.3-curl
-
-# IMAGE MAGIC
-sudo apt-get -y install imagemagick
-sudo apt-get -y install php7.3-imagick
-
-#
-# CUSTOM PHP SETTINGS
-#
-PHP_USER_INI_PATH=/etc/php/7.3/apache2/php.ini
-
-echo 'display_errors = On' | sudo tee -a $PHP_USER_INI_PATH
-echo 'display_startup_errors = On' | sudo tee -a $PHP_USER_INI_PATH
-echo 'error_reporting = E_ALL' | sudo tee -a $PHP_USER_INI_PATH
-echo 'post_max_size = 1024M' | sudo tee -a $PHP_USER_INI_PATH
-echo 'short_open_tag = On' | sudo tee -a $PHP_USER_INI_PATH
-echo 'upload_max_filesize = 1024M' | sudo tee -a $PHP_USER_INI_PATH
-
-# Disable PHP Zend OPcache
-echo 'opache.enable = 0' | sudo tee -a $PHP_USER_INI_PATH
-
-# Absolutely Force Zend OPcache off...
-sudo sed -i s,\;opcache.enable=0,opcache.enable=0,g /etc/php/7.3/apache2/php.ini
+# PHP settings
+echo 'display_errors = On
+display_startup_errors = On
+error_reporting = E_ALL
+post_max_size = 1024M
+short_open_tag = On
+upload_max_filesize = 1024M
+opache.enable = 0' | sudo tee /etc/php/7.3/apache2/php.ini
 
 sudo service apache2 restart
 
@@ -135,7 +107,7 @@ sudo chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
 
 #
-# Node.js
+# Node.js, NPM & NVM
 #
 sudo apt-get -y install nodejs
 sudo apt-get -y install npm
@@ -145,19 +117,15 @@ wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | bash
 source ~/.nvm/nvm.sh
 
 #
-# Ruby
+# Ruby, Bundler & RVM
 #
 sudo apt-get -y install ruby
 sudo apt-get -y install ruby-dev
-
-# RVM
 gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 \curl -sSL https://get.rvm.io | bash -s stable
 source ~/.rvm/scripts/rvm
 rvm install 2.6.3
 rvm use 2.6.3
-
-# Bundler
 sudo gem install bundler
 
 #
