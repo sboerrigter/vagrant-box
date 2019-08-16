@@ -104,6 +104,7 @@ sudo apt-get install -y nodejs
 sudo apt-get install -y npm
 wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | bash
 source ~/.nvm/nvm.sh
+sudo ln -s /usr/bin/nodejs /usr/bin/node
 sudo npm install -g gulp
 
 # Ruby, Bundler & RVM
