@@ -83,6 +83,10 @@ sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password passwor
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 sudo apt-get install -y mysql-server
 sudo apt-get install -y php7.3-mysql
+
+echo '[mysql]
+default-character-set = utf8mb4' | sudo tee /etc/mysql/conf.d/mysql
+
 sudo service apache2 restart
 
 # Composer
