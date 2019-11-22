@@ -61,6 +61,7 @@ sudo apt-get install -y php7.4-mbstring
 sudo apt-get install -y php7.4-odbc
 sudo apt-get install -y php7.4-pspell
 sudo apt-get install -y php7.4-tidy
+sudo apt-get install -y php7.4-xml
 sudo apt-get install -y php7.4-xmlrpc
 sudo apt-get install -y php7.4-zip
 
