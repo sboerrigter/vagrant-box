@@ -35,34 +35,34 @@ sudo service apache2 restart
 # PHP
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
-sudo apt-get install -y php7.3
+sudo apt-get install -y php7.4
 sudo apt-get install -y libapache2-mod-php
 sudo apt-get install -y curl
 sudo apt-get install -y imagemagick
 sudo apt-get install -y ldap-utils
 sudo apt-get install -y libenchant-dev
 sudo apt-get install -y php-pear
-sudo apt-get install -y php7.3-bcmath
-sudo apt-get install -y php7.3-bz2
-sudo apt-get install -y php7.3-cgi
-sudo apt-get install -y php7.3-cli
-sudo apt-get install -y php7.3-common
-sudo apt-get install -y php7.3-curl
-sudo apt-get install -y php7.3-dev
-sudo apt-get install -y php7.3-enchant
-sudo apt-get install -y php7.3-fpm
-sudo apt-get install -y php7.3-gd
-sudo apt-get install -y php7.3-imagick
-sudo apt-get install -y php7.3-imap
-sudo apt-get install -y php7.3-intl
-sudo apt-get install -y php7.3-json
-sudo apt-get install -y php7.3-ldap
-sudo apt-get install -y php7.3-mbstring
-sudo apt-get install -y php7.3-odbc
-sudo apt-get install -y php7.3-pspell
-sudo apt-get install -y php7.3-tidy
-sudo apt-get install -y php7.3-xmlrpc
-sudo apt-get install -y php7.3-zip
+sudo apt-get install -y php7.4-bcmath
+sudo apt-get install -y php7.4-bz2
+sudo apt-get install -y php7.4-cgi
+sudo apt-get install -y php7.4-cli
+sudo apt-get install -y php7.4-common
+sudo apt-get install -y php7.4-curl
+sudo apt-get install -y php7.4-dev
+sudo apt-get install -y php7.4-enchant
+sudo apt-get install -y php7.4-fpm
+sudo apt-get install -y php7.4-gd
+sudo apt-get install -y php7.4-imagick
+sudo apt-get install -y php7.4-imap
+sudo apt-get install -y php7.4-intl
+sudo apt-get install -y php7.4-json
+sudo apt-get install -y php7.4-ldap
+sudo apt-get install -y php7.4-mbstring
+sudo apt-get install -y php7.4-odbc
+sudo apt-get install -y php7.4-pspell
+sudo apt-get install -y php7.4-tidy
+sudo apt-get install -y php7.4-xmlrpc
+sudo apt-get install -y php7.4-zip
 
 echo '<IfModule mod_dir.c>
     DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
@@ -82,7 +82,7 @@ sudo service apache2 restart
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 sudo apt-get install -y mysql-server
-sudo apt-get install -y php7.3-mysql
+sudo apt-get install -y php7.4-mysql
 
 echo '[mysql]
 default-character-set = utf8mb4' | sudo tee /etc/mysql/conf.d/mysql
@@ -115,10 +115,10 @@ sudo npm install -g gulp
 sudo apt-get install -y ruby
 sudo apt-get install -y ruby-dev
 gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-\curl -sSL https://get.rvm.io | bash -s stable
+curl -sSL https://get.rvm.io | bash -s stable
 source ~/.rvm/scripts/rvm
-rvm install 2.6.3
-rvm use 2.6.3
+rvm install 2.6.5
+rvm use 2.6.5
 gem install bundler
 
 # Finish installation
