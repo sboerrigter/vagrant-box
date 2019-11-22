@@ -19,8 +19,8 @@ Some of these dependencies wil automatically update to the latest version if you
 ## Installation
 
 1. Download and install the latest version of [Vagrant](https://www.vagrantup.com/downloads.html).
-2. Download and install the latest version [VirualBox](https://www.virtualbox.org/wiki/Downloads).
-3. Navigate to your websites folder. For example: `cd ~/sites`.
+2. Download and install the latest version [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+3. Navigate to your websites folder. For example: `cd ~/Sites`.
 4. Run the following commands:
 
 ```bash
@@ -32,7 +32,7 @@ vagrant up
 
 ## Usage
 
-Next time you want to start Vagrant you can use the following commands:
+The next time you want to start Vagrant you can use the following commands:
 
 ```bash
 cd ~/Sites/vagrant-box
@@ -49,19 +49,19 @@ vagrant ssh
 **Pro tip**: You can add the following to your `~/.bash_profile` file so you can use the `vu` command to start vagrant and SSH into it:
 
 ```
-alias vu="cd ~/sites/vagrant-box && ssh-add && vagrant up && vagrant ssh"
+alias vu="cd ~/Sites/vagrant-box && ssh-add && vagrant up && vagrant ssh"
 ```
 
 ## Add a website
 
-To add a new website to the Vagrant box you need to follow the following steps:
+To add a new website to the Vagrant box you need to perform the following steps:
 
 1. Add the website files to your websites folder (for example in: `~/sites/project`).
 2. Open your host file (`sudo nano /etc/hosts`) and add the following line:
 
 `192.168.33.10 www.project.test project.test`
 
-3. Copy `~/Sites/vagrant-box/sites/example.conf` to `~/sites/vagrant-box/sites/project.conf` and set the correct DocumentRoot, ServerName and ServerAlias.
+3. Copy `~/Sites/vagrant-box/sites/example.conf` to `~/Sites/vagrant-box/sites/project.conf` and set the correct DocumentRoot, ServerName and ServerAlias.
 4. SSH into your Vagrant box and run `sudo service apache2 restart`.
 5. Go to http://www.project.test to view your website.
 
