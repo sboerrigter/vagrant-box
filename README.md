@@ -12,14 +12,14 @@ Custom Vagrant box to host multiple websites on a local virtual machine. Based o
 - WP CLI
 - Node.js, NPM & NVM
 - Ruby, Bundler & RVM
-- A few useful bash aliasses to run Capistrano commands (see `.bashrc`)
+- A few useful bash aliases to run Capistrano commands (see `.bashrc`)
 
 Some of these dependencies wil automatically update to the latest version if you run `vagrant provision` or `vagrant up` for the first time.
 
 ## Installation
 
 1. Download and install the latest version of [Vagrant](https://www.vagrantup.com/downloads.html).
-2. Download and install the latest version [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+2. Download and install the latest version of [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 3. Navigate to your websites folder. For example: `cd ~/Sites`.
 4. Run the following commands:
 
