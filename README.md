@@ -7,7 +7,7 @@ Custom Vagrant box to host multiple websites on a local virtual machine. Based o
 - Ubuntu 16.4
 - Apache 2.4
 - MySQL 5.7
-- PHP 7.3
+- PHP 7.4
 - Composer
 - WP CLI
 - Node.js, NPM & NVM
