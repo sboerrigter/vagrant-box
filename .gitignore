@@ -1,6 +1,5 @@
 .DS_STORE
 .vagrant
 sites/*
-!sites/.gitkeep
 !sites/example.conf
 !sites/webgrind.conf
