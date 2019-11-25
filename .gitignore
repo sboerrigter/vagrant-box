@@ -3,3 +3,4 @@
 sites/*
 !sites/.gitkeep
 !sites/example.conf
+!sites/webgrind.conf

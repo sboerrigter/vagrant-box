@@ -79,6 +79,27 @@ opache.enable = 0' | sudo tee /etc/php/7.3/apache2/php.ini
 
 sudo service apache2 restart
 
+# Xdebug
+git clone https://github.com/jokkedk/webgrind.git /var/www/webgrind
+sudo apt-get install graphviz -y
+sudo apt-get install php7.4-xdebug -y
+
+echo 'zend_extension = xdebug.so
+[xdebug]
+xdebug.profiler_enable_trigger = 1
+xdebug.profiler_output_name = cachegrind.%H.%R.%t
+xdebug.remote_enable = 1
+xdebug.remote_handler = dbgp
+xdebug.remote_mode = req
+xdebug.remote_host = 10.0.2.2
+xdebug.remote_port = 9000
+xdebug.remote_connect_back = 1
+xdebug.remove_log = /var/log/xdebug.log
+xdebug.show_local_vars = 1
+xdebug.var_display_max_depth = 8
+xdebug.var_display_max_children = 256
+xdebug.var_display_max_data = 1024' | sudo tee /etc/php/7.4/mods-available/xdebug.ini
+
 # MySQL
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
